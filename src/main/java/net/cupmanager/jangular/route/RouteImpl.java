@@ -32,7 +32,7 @@ class RouteImpl implements Route<RouteImpl> {
 			for (String kv : kvs) {
 				String[] _kv = kv.split("=");
 				String key = _kv[0];
-				String value = _kv[1];
+				String value = _kv.length > 1 ? _kv[1] : null;
 				query.put(key, value);
 			}
 		}
@@ -131,7 +131,10 @@ class RouteImpl implements Route<RouteImpl> {
 		for (Map.Entry<String, String> e : query.entrySet()) {
 			url += first ? "?" : "&";
 			first = false;
-			url += e.getKey() + "=" + e.getValue();
+			url += e.getKey();
+			if (e.getValue() != null) {
+				url += "=" + e.getValue();
+			}
 		}
 		return url;
 	}

@@ -128,12 +128,9 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 		try {
 			
 			String[] ignore = new String[]{"^/assets", "^/favicon"};
-//			String[] open = new String[]{"^/$", "^/files", "^/login"};
 			
 			boolean shouldIgnore = RouteUtil.matchesAny(target, ignore);
 			if (!shouldIgnore) {
-//				boolean isOpen = matchesAny(target, open);
-				
 				U user = usupplier.apply(request);   
 				R route = from(target, request.getQueryString());
 				
@@ -159,15 +156,8 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 						CompiledTemplate template = compiler.compile(spec, appScopeClass);
 						template.printWarnings();
 						
-						EvaluationContext context = evalContextSupplier.supply(route, user);
-//						JangularHandler.NyckeltalEvalContext context = new NyckeltalEvalContext();
-//						context.user = user;
-//						context.route = route;
-						
-						Scope scope = evalScopeSupplier.supply(route, user);
-//						JangularHandler.NyckeltalAppScope appscope = new NyckeltalAppScope();
-//						appscope.Route = route;
-//						appscope.isOpen = isOpen;
+						EvaluationContext context = evalContextSupplier.supply(route, user, request);
+						Scope scope = evalScopeSupplier.supply(route, user, request);
 						
 						StringBuilder sb = new StringBuilder();
 						long start = System.currentTimeMillis();
