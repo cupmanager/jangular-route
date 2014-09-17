@@ -13,8 +13,10 @@ class RouteImpl implements Route<RouteImpl> {
 	
 	private List<String> pathParts = new ArrayList<String>();
 	private Map<String,String> query = new LinkedHashMap<String,String>();
+	private String prefix;
 	
-	RouteImpl(String path) {
+	RouteImpl(String path, String prefix) {
+		this.prefix = prefix;
 		if (path.startsWith("/")) {
 			path = path.substring(1);
 		}
@@ -38,9 +40,10 @@ class RouteImpl implements Route<RouteImpl> {
 		}
 	}
 	
-	RouteImpl(List<String> pathParts, Map<String,String> query) {
+	RouteImpl(List<String> pathParts, Map<String,String> query, String prefix) {
 		this.pathParts = new ArrayList<String>(pathParts);
 		this.query = new LinkedHashMap<String,String>(query);
+		this.prefix = prefix;
 	}
 	
 	
@@ -49,14 +52,14 @@ class RouteImpl implements Route<RouteImpl> {
 		if (value == null) return this;
 		Map<String, String> map = new LinkedHashMap<String,String>(query);
 		map.put(key,""+value);
-		return new RouteImpl(pathParts, map);
+		return new RouteImpl(pathParts, map, prefix);
 	}
 	
 	@Override
 	public RouteImpl withoutQuery(String key) {
 		Map<String, String> map = new LinkedHashMap<String,String>(query);
 		map.remove(key);
-		return new RouteImpl(pathParts, map);
+		return new RouteImpl(pathParts, map, prefix);
 	}
 
 	@Override
@@ -75,7 +78,7 @@ class RouteImpl implements Route<RouteImpl> {
 	
 	@Override
 	public RouteImpl pathPart(int idx, Object v) {
-		RouteImpl r = new RouteImpl(pathParts, query);
+		RouteImpl r = new RouteImpl(pathParts, query, prefix);
 		if (idx < pathParts.size()) {
 			r.pathParts.set(idx, v.toString());
 			while (idx < r.pathParts.size()-1) {
@@ -100,7 +103,7 @@ class RouteImpl implements Route<RouteImpl> {
 			}
 			topath = p + topath;
 		}
-		RouteImpl r = new RouteImpl(topath);
+		RouteImpl r = new RouteImpl(topath, prefix);
 		if (r.query.isEmpty()) {
 			r.query = new LinkedHashMap<String,String>(query);
 		}
@@ -111,7 +114,8 @@ class RouteImpl implements Route<RouteImpl> {
 	public RouteImpl up() {
 		return new RouteImpl(
 				pathParts.subList(0, pathParts.size()-1), 
-				query);
+				query, 
+				prefix);
 	}
 	
 	@Override
@@ -121,7 +125,7 @@ class RouteImpl implements Route<RouteImpl> {
 	
 	@Override
 	public String toString() {
-		return path() + queryString();
+		return prefix + path() + queryString();
 	}
 	
 	@Override

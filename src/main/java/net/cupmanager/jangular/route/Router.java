@@ -40,6 +40,7 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 	
 	private EvaluationContextSupplier<R, U> evalContextSupplier;
 	private EvaluationScopeSupplier<R, U> evalScopeSupplier;
+	private String prefix = "";
 	
 	
 	
@@ -88,7 +89,7 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 
 	
 	public R from(String path) {
-		return routeConstructor.apply(new RouteImpl(path));
+		return routeConstructor.apply(new RouteImpl(path, prefix));
 	}
 	public R from(String target, String queryString) {
 		String path = target;
@@ -126,6 +127,7 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 	
 	public boolean handle(String target, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
+			target = target.substring(prefix.length());
 			
 			String[] ignore = new String[]{"^/assets", "^/favicon"};
 			
@@ -183,11 +185,12 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 		
 		return false;
 	}
-	
-	
-	
-	
 
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	
 	
 	
 }
