@@ -124,7 +124,7 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 		return new QueueResourceSpecification(spec);
 	}
 	
-	public boolean handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException {
+	public boolean handle(String target, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
 			
 			String[] ignore = new String[]{"^/assets", "^/favicon"};
