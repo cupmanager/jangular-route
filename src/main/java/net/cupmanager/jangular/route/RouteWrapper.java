@@ -64,5 +64,4 @@ public class RouteWrapper<T extends Route<T>> implements Route<T> {
 			return false;
 		}
 	}
-	
 }
