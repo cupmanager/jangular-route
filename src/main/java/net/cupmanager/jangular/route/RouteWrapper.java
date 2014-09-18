@@ -19,6 +19,9 @@ public class RouteWrapper<T extends Route<T>> implements Route<T> {
 	public String query(String key) {
 		return route.query(key);
 	}
+	public int queryInt(String key) {
+		return RouteUtil.parseInt(route.query(key), 0);
+	}
 
 	public T withoutQuery(String key) {
 		return constructor.apply(route.withoutQuery(key));
