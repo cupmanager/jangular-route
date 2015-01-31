@@ -1,6 +1,7 @@
 package net.cupmanager.jangular.route;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,13 @@ import net.cupmanager.jangular.compiler.CompilerConfiguration;
 import net.cupmanager.jangular.compiler.QueueResourceSpecification;
 import net.cupmanager.jangular.compiler.ResourceSpecification;
 import net.cupmanager.jangular.compiler.TemplateCompiler;
+import net.cupmanager.jangular.compiler.templateloader.NoSuchScopeFieldException;
 import net.cupmanager.jangular.compiler.templateloader.TemplateLoader;
+import net.cupmanager.jangular.compiler.templateloader.TemplateLoaderException;
+import net.cupmanager.jangular.exceptions.CompileExpressionException;
+import net.cupmanager.jangular.exceptions.ControllerNotFoundException;
+import net.cupmanager.jangular.exceptions.EvaluationException;
+import net.cupmanager.jangular.exceptions.ParseException;
 import net.cupmanager.jangular.injection.EvaluationContext;
 
 import com.google.common.base.Function;
@@ -125,8 +132,7 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 		return new QueueResourceSpecification(spec);
 	}
 	
-	public boolean handle(String target, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		try {
+	public boolean handle(String target, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException, TemplateLoaderException, ControllerNotFoundException, ParseException, NoSuchScopeFieldException, CompileExpressionException, EvaluationException  {
 			target = target.substring(prefix.length());
 			
 			String[] ignore = new String[]{"^/assets", "^/favicon"};
@@ -179,9 +185,6 @@ public class Router<R extends Route<R>, U> implements RouteRewriter<R, U>, Route
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
 		return false;
 	}
